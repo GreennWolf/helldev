@@ -1,0 +1,2093 @@
+A continuación tienes la misma especificación técnica para la web de HellDev, pero adaptada a un desarrollo sin usar TypeScript, utilizando únicamente JavaScript y buenas prácticas estándar. Se mantiene la estructura, stack y directrices de diseño, eliminando todas las referencias a TS.
+
+---
+
+## 1. Objetivos y alcance
+
+1. Objetivos principales de la web
+
+    Comunicar la identidad de HellDev como empresa de desarrollo indie y disruptivo, con énfasis en “infierno creativo” y automatización con IA.
+    Mostrar portafolio de proyectos y casos de éxito (incluyendo ejemplos de automatización con IA, apps webmóvil, sprints infernales).
+    Captar leads formulario de contacto optimizado, integración con email marketing yo WhatsApp Business.
+    Posicionar el sitio en buscadores (SEO on-page y off-page) para keywords como “desarrollo indie”, “automatización con IA”, “software disruptivo”.
+    Ser escalable para futuras secciones (blog, recursos, actualizaciones de IA, documentación técnica).
+
+2. Usuarios y público objetivo
+
+    Startups que buscan un partner ágil para crear o escalar MVPs.
+    Empresas medianas que requieren soluciones de automatización con IA para optimizar procesos.
+    Entusiastas de tecnología  desarrolladores que quieran lecturas técnicas (blog).
+    Posibles inversores o colaboradores que deseen explorar la filosofía “infierno creativo”.
+
+3. Alcance del documento
+
+    Definir la estructura de páginas, contenido y jerarquía.
+    Describir la arquitectura técnica (front-end, back-end, base de datos, APIs, integraciones).
+    Establecer directrices de diseño UIUX (colores, tipografías, layout, sistema de diseño).
+    Detallar requisitos de rendimiento, accesibilidad y SEO.
+    Proponer un flujo de despliegue (CICD), hosting y monitorización.
+
+---
+
+## 2. Estructura del sitio y sitemap
+
+Proponemos la siguiente estructura mínima de secciones y subsecciones. Cada página debe construirse de forma responsiva y modular.
+
+```
+
+├── Home ()  
+├── Nosotros (nosotros)  
+│   ├── Filosofía de HellDev  
+│   ├── Equipo (fotos + mini-bios)  
+│   └── Cultura “infierno creativo”  
+├── Servicios (servicios)  
+│   ├── Desarrollo indie  
+│   ├── Automatización con IA  
+│   ├── Sprints infernales (Metodología)  
+│   └── Consultoría técnica  
+├── Portafolio (portfolio)  
+│   ├── Proyectos Destacados (casos de éxito)  
+│   └── Galería de trabajos (filtrado por categoría móvil, web, IA, diseño)  
+├── Blog (blog)  
+│   ├── Artículos Técnicos (React, Python, IA, DevOps)  
+│   └── Tutoriales (DevHellTips)  
+├── Contacto (contacto)  
+│   ├── Formulario de contacto (nombre, email, mensaje, tipo de proyecto)  
+│   ├── Mapa de ubicación (Google Maps embebido)  
+│   └── Datos de contacto directos (email, WhatsApp, teléfono)  
+└── Privacidad (privacidad)  
+```
+
+ Nota en un futuro se podrá añadir versión en inglés (en), pero inicialmente se hará todo en español.
+
+---
+
+## 3. Arquitectura técnica (Stack tecnológico)
+
+### 3.1. Tecnologías de Front-end
+
+1. Framework principal
+
+    Next.js (React), sin TypeScript.
+
+      Permite SSR y SSG, optimizando SEO y performance.
+      Se usa la carpeta `pages` (Next.js 1213 con Page Router) o `app` (Next.js 13 con App Router), pero todo en JavaScript.
+
+2. Librerías y dependencias clave
+
+    React (v18+)
+    Next.js (v13+)
+    Tailwind CSS (con configuración personalizada para la paleta de HellDev)
+    Framer Motion (animaciones sutiles en elementos clave)
+    SWR (para fetch de datos si se requiere contenido dinámico en futuro)
+    Headless UI (componentes accesibles para modals, dropdowns, menús responsivos)
+    react-hook-form (versión en JavaScript para validaciones de formularios)
+    Yup (para esquema de validación en cliente si se quiere; aunque se puede hacer validación manual en JS)
+
+3. Preprocesadores  Herramientas de build
+
+    ESLint (configuración basada en Airbnb o similar, pero adaptada a proyectos Next.js).
+    Prettier (formato de código estándar).
+    PostCSS (autoprefixer y procesamiento de Tailwind).
+    Vercel (o Netlify) como plataforma de hosting (edge functions  serverless).
+
+4. Estructura de carpetas (ejemplo con App Router)
+
+   ```
+   app
+   ├── layout.js                  # Layout global (header, footer, imports de global.css)
+   ├── globals.css               # Tailwind + estilos globales
+   ├── page.js                    # Home ()  
+   ├── about
+   │   └── page.js                # nosotros
+   ├── services
+   │   ├── page.js                # servicios
+   │   ├── automation-ia
+   │   │   └── page.js            # serviciosautomatizacion-ia
+   │   └── sprints-infernales
+   │       └── page.js            # serviciossprints-infernales
+   ├── portfolio
+   │   ├── page.js                # portfolio (listado)
+   │   └── [slug]
+   │       └── page.js            # portfolio[proyecto]
+   ├── blog
+   │   ├── page.js                # blog (listado)
+   │   └── [slug]
+   │       └── page.js            # blog[articulo]
+   ├── contact
+   │   └── page.js                # contacto
+   └── privacy
+       └── page.js                # privacidad
+   ```
+
+5. Componentes reutilizables
+
+    Header
+
+      Logo (solo símbolo “H + llama”) que enlace a ``.
+      Menú responsivo en Desktop, enlaces a Home, Nosotros, Servicios (hover con submenú), Portafolio, Blog, Contacto; en Mobile, menú hamburguesa que despliega panel lateral.
+      Iconos sociales (SVG) con color beige y hover en rojo.
+    Footer
+
+      Logo pequeño en blanco.
+      Enlaces internos (mismo menú).
+      Enlaces externos Política de Privacidad, Instagram, LinkedIn.
+      Copyright “© 2025 HellDev”.
+    Botón “Scroll to Top”
+
+      Icono circular con fondo rojo (#E32F2F) y flecha blanca para subir a inicio.
+    Hero (Home)
+
+      Fondo negro con animación de llama (Framer Motion).
+      Título H1
+
+       ```
+       “Bienvenido al Infierno Creativo del Software”
+       ```
+
+        Tipografía “Bebas Neue” (importada desde Google Fonts), color beige (#D9C6A7), tamaños responsivos (`text-5xl mdtext-7xl lgtext-8xl`).
+      Subtítulo
+
+       ```
+       “Desarrollo indie, automatización con IA y sprints infernales para tu próximo proyecto”
+       ```
+
+        Color blanco suave (#F5F5F5), `text-lg mdtext-xl lgtext-2xl`.
+      Botones CTA (dos, en Desktop lado a lado; en Mobile en stack)
+
+       1. “Ver Servicios” (scroll a sección “Servicios” interna).
+       2. “Contacto” (enlace a `contacto`).
+
+        Estilo
+
+          Fondo rojo (#E32F2F), texto beige (#D9C6A7), padding (`px-6 py-3`), `rounded-md`.
+          Hover → fondo naranja neón (#FF8C00).
+
+---
+
+### 3.2. Tecnologías de Back-end
+
+Optaremos por un enfoque Jamstack con funciones serverless de Next.js, de modo que el blog y portafolio se sirvan como contenido estático (MDXMarkdown) y el formulario de contacto use API Routes.
+
+1. CMS  Contenido
+
+    Carpeta `content` con MDX  Markdown para blog y portafolio
+
+     ```
+     content
+     ├── portfolio
+     │   ├── proyecto-a.md
+     │   ├── proyecto-b.md
+     │   └── …  
+     └── blog
+         ├── articulo-1.md
+         ├── articulo-2.md
+         └── …  
+     ```
+    Cada archivo `.md` o `.mdx` incluye frontmatter YAML con campos (`title`, `date`, `tags`, `excerpt`, `coverImage`, `technologies`, `cliente`, `linkExterno`).
+
+2. API Route `apicontact`
+
+    Archivo `pagesapicontact.js` (o en App Router `appapicontactroute.js`).
+    Manejo de petición
+
+      Método `POST`
+      Payload esperado (JSON)
+
+       ```json
+       {
+         name string,
+         email string,
+         phone string (opcional),
+         serviceInterested string,
+         message string
+       }
+       ```
+      Validaciones (en JS)
+
+       1. Todos los campos obligatorios excepto `phone` (opcional).
+       2. Email con regex simple
+
+          ```js
+          const emailRegex = ^[^s@]+@[^s@]+.[^s@]+$;
+          if (!emailRegex.test(body.email)) {
+            return res.status(400).json({ error 'Email inválido' });
+          }
+          ```
+       3. Mensaje mínimo 20 caracteres.
+       4. CSRFXSS escapado al reenviar por email; validación de longitud y tipo de dato.
+      Flujo interno
+
+       1. Recibir y validar datos en `req.body`.
+       2. Guardar lead en base de datos
+
+           Opción A Supabase (PostgreSQL gestionado)
+
+             Tabla `leads` con esquema
+
+              ```sql
+              CREATE TABLE leads (
+                id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                name TEXT NOT NULL,
+                email TEXT NOT NULL,
+                phone TEXT,
+                service_interested TEXT NOT NULL,
+                message TEXT NOT NULL,
+                created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+              );
+              ```
+             Insertar con la librería oficial de Supabase en JS
+
+              ```js
+              import { createClient } from '@supabasesupabase-js';
+              const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+              await supabase.from('leads').insert({
+                name body.name,
+                email body.email,
+                phone body.phone,
+                service_interested body.serviceInterested,
+                message body.message
+              });
+              ```
+           Opción B (ligera) Google Sheets + ZapierIntegromat
+
+             Enviar formulario a Google Sheets usando Zapier. Declinar si se planifica escalar.
+       3. Enviar email interno de notificación a `contacto@helldev.es` con SendGrid (o Mailgun)
+
+           Configurar SendGrid en el dashboard y usar su SDK en JS
+
+            ```js
+            import sgMail from '@sendgridmail';
+            sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+            const msg = {
+              to 'contacto@helldev.es',
+              from 'no-reply@helldev.es',
+              subject 'Nuevo lead desde la web HellDev',
+              html `
+                pstrongNombrestrong ${body.name}p
+                pstrongEmailstrong ${body.email}p
+                pstrongTeléfonostrong ${body.phone  'No proporcionado'}p
+                pstrongServiciostrong ${body.serviceInterested}p
+                pstrongMensajestrongp
+                p${body.message}p
+              `
+            };
+            await sgMail.send(msg);
+            ```
+       4. Enviar email de confirmación al usuario (auto-reply) con plantilla sencilla
+
+          ```js
+          const confirmMsg = {
+            to body.email,
+            from 'contacto@helldev.es',
+            subject 'Gracias por contactarnos — HellDev',
+            html `
+              h2¡Hola ${body.name}!h2
+              pGracias por escribirnos. Hemos recibido tu mensaje y te contactaremos en menos de 24 horas.p
+              pSaludos,brEl equipo HellDev 🔥p
+            `
+          };
+          await sgMail.send(confirmMsg);
+          ```
+       5. Responder al cliente con `{ ok true }` o `{ error 'mensaje' }` en caso de fallo.
+
+3. Base de datos
+
+    Supabase recomendable para escalabilidad y autenticación futura.
+    Variables de entorno necesarias
+
+     ```
+     SUPABASE_URL  
+     SUPABASE_KEY  
+     SENDGRID_API_KEY  
+     GOOGLE_MAPS_API_KEY  
+     RECAPTCHA_SECRET_KEY  
+     NEXT_PUBLIC_RECAPTCHA_SITE_KEY  
+     ```
+
+4. Integraciones adicionales
+
+    Google Maps API para el mapa en `contacto`.
+    Google Analytics 4 o Google Tag Manager seguimiento de usuarios y eventos.
+    Hotjar (opcionales) mapas de calor y grabaciones de sesiones para analizar la UI.
+    reCAPTCHA v3 en el formulario `apicontact` para mitigar spambots.
+
+---
+
+### 3.3. Infraestructura y despliegue (CICD)
+
+1. Repositorios y control de versiones
+
+    GitHub (o GitLab) como repositorio principal.
+    Estrategia de ramas
+
+      `main` (producción estable).
+      `develop` (integración de features).
+      `featurex` o `hotfixy` para trabajo local.
+    Protección de rama `main`
+
+      Pull Request obligatorio con revisión mínima de un reviewer.
+      Checks automáticos ESLint y pruebas (si se agregan).
+
+2. Integración continua (CI)
+
+    GitHub Actions (o GitLab CI) con flujos de trabajo
+
+     1. Lint & Build
+
+         Al hacer push a `develop` o a cualquier rama con `feature`, ejecutar
+
+          ```bash
+          npm ci
+          npm run lint
+          npm run build
+          ```
+         Si falla, bloquear merge.
+     2. Preview Deploy
+
+         Cada PR genera un preview en Vercel (o entorno de staging en Netlify).
+     3. Deploy a producción
+
+         Al hacer merge a `main`, se dispara el workflow que construye y publica en Vercel.
+
+3. Hosting y CDN
+
+    Vercel (recomendado para Next.js)
+
+      Builds y previews automáticos.
+      CDN global incluye caché de assets.
+      Dominio personalizado `helldev.es`.
+      Variables de entorno definidas en el dashboard de Vercel.
+
+4. Certificados SSL  HTTPS
+
+    Gestionados automáticamente por VercelNetlify.
+
+5. Dominio y DNS
+
+    Configurar registros
+
+      A o CNAME apuntando a Vercel.
+      TXT para validaciones (Google, reCAPTCHA).
+
+---
+
+## 4. Diseño UIUX y línea gráfica
+
+### 4.1. Paleta de colores (branding)
+
+ Negro intenso
+
+   HEX `#000000`
+   Uso fondos principales, secciones, tarjetas de contenido clave.
+ Rojo carmesí (HellDev Red)
+
+   HEX `#E32F2F`
+   Uso botones principales (CTA), iconos, links importantes, hover states.
+ Naranja neón
+
+   HEX `#FF8C00`
+   Uso hover de botones, detalles de microinteracción, highlights secundarios.
+ Beige pálido
+
+   HEX `#D9C6A7`
+   Uso textos destacados (titulares), íconos vectoriales sobre negro, subtítulos.
+ Blanco suave  Gris claro
+
+   HEX `#F5F5F5` (o `#EFEFEF`)
+   Uso textos de párrafo sobre fondo oscuro, iconos sociales.
+
+ Tailwind tokens (ejemplo en `tailwind.config.js`)
+
+ ```js
+ module.exports = {
+   theme {
+     extend {
+       colors {
+         helldev {
+           black '#000000',
+           red '#E32F2F',
+           orange '#FF8C00',
+           beige '#D9C6A7',
+           greyLight '#F5F5F5'
+         }
+       },
+       fontFamily {
+         helldevTitle ['Bebas Neue', 'sans-serif'],
+         helldevBody ['Montserrat', 'sans-serif']
+       }
+     }
+   }
+ };
+ ```
+
+### 4.2. Tipografía y jerarquía
+
+1. Fuente principal (Titulares)
+
+    “Bebas Neue” (importable vía Google Fonts)
+    Uso Hero headings, títulos de secciones (H1, H2) y botones CTA.
+    Tamaños sugeridos (Desktop)
+
+      H1 `4rem` (64px)
+      H2 `3rem` (48px)
+      H3 `2.25rem` (36px)
+
+2. Fuente secundaria (Texto de cuerpo)
+
+    “Montserrat” (importable vía Google Fonts)
+    Uso párrafos, listas de servicios, descripciones de portafolio, captions.
+    Tamaño (Desktop) `1rem` (16px); Mobile `0.875rem` (14px).
+
+3. Spacing y márgenes (Tailwind)
+
+    Base
+
+      `0.5rem` (8px) = `gap-2`
+      `1rem` (16px) = `gap-4`
+      `1.5rem` (24px) = `gap-6`
+      `2rem` (32px) = `gap-8`
+      `3rem` (48px) = `gap-12`
+      `4rem` (64px) = `gap-16`
+    Contenedores centrados
+
+      Móvil `w-full px-4`
+      Tablet `max-w-3xl mx-auto px-6`
+      Desktop `max-w-6xl mx-auto px-8`.
+
+### 4.3. Layout y componentes principales
+
+#### 4.3.1. Header  Navbar
+
+ Altura `5rem` (80px) en Desktop.
+ Fondo inicial transparente; al hacer scroll ( 50px) cambia a `bg-black80` (`#000000CC`) con sombra (`shadow-md`).
+ Contenido
+
+   Logo (símbolo) en la esquina izquierda, height ~`2.5rem`.
+   Menú Desktop
+
+     Enlaces Home, Nosotros, Servicios (hover despliega submenú), Portafolio, Blog, Contacto.
+     Botón CTA “¡Hablemos!”
+
+       Clases Tailwind `bg-helldev-red text-helldev-beige rounded-md px-4 py-2 hoverbg-helldev-orange transition`.
+   Iconos sociales (SVG) en la derecha
+
+     Instagram, LinkedIn. Color inicial beige; hover → rojo.
+   Menú Mobile ( 768px)
+
+     Icono hamburguesa en color beige (`w-6 h-6`).
+     Al click, abre un drawer lateral (`fixed inset-0 bg-black80 z-50`), con menú vertical y botón cerrar (`X` en rojo).
+
+#### 4.3.2. Sección Hero (Home)
+
+ Altura `min-h-screen` en Desktop; `min-h-[60vh]` en Mobile.
+ Background
+
+   Negro puro (`bg-black`).
+   Animación de llama componente SVG animado con Framer Motion (ligera oscilación de escala y opacidad).
+ Overlay
+
+   Capa semitransparente `bg-black50` detrás del texto para mejorar legibilidad.
+ Contenido centrado
+
+   Título H1
+
+    ```jsx
+    h1 className=font-helldevTitle text-5xl mdtext-7xl lgtext-8xl text-helldev-beige text-center
+      Bienvenido al Infierno Creativo del Software
+    h1
+    ```
+   Subtítulo
+
+    ```jsx
+    p className=mt-4 text-lg mdtext-xl lgtext-2xl text-helldev-greyLight text-center
+      Desarrollo indie, automatización con IA y sprints infernales para tu próximo proyecto
+    p
+    ```
+   Botones CTA (en un contenedor flex, centrado)
+
+    ```jsx
+    div className=mt-8 flex flex-col mdflex-row justify-center items-center gap-4
+      Link href=#servicios
+        a className=bg-helldev-red text-helldev-beige px-6 py-3 rounded-md hoverbg-helldev-orange transition
+          Ver Servicios
+        a
+      Link
+      Link href=contacto
+        a className=bg-helldev-red text-helldev-beige px-6 py-3 rounded-md hoverbg-helldev-orange transition
+          Contacto
+        a
+      Link
+    div
+    ```
+
+#### 4.3.3. Sección “Sobre HellDev” (`nosotros`)
+
+ Contenedor grid
+
+  ```jsx
+  section className=flex flex-col mdflex-row items-center max-w-6xl mx-auto px-8 py-16 gap-8
+    div className=mdw-12
+      Image src=equipo-helldev.jpg alt=Equipo HellDev width={800} height={600} className=rounded-lg shadow-xl object-cover 
+    div
+    div className=mdw-12 bg-black70 p-6 rounded-lg
+      h2 className=font-helldevTitle text-4xl mdtext-5xl text-helldev-beige
+        ¿Quiénes somos
+      h2
+      p className=mt-4 text-helldev-greyLight text-lg
+        En HellDev, vivimos en el infierno creativo del software. Somos un equipo de desarrolladores independientes que no le teme a nada rompe...
+      p
+      p className=mt-2 text-helldev-greyLight text-lg
+        Nuestra misión es crear aplicaciones que rompan esquemas, automatizar procesos con IA y ejecutar sprints infernales para lanzar proyectos en tiempo récord.
+      p
+    div
+  section
+  ```
+
+ Sección “Equipo”
+
+  ```jsx
+  section className=max-w-6xl mx-auto px-8 py-16
+    h3 className=font-helldevTitle text-3xl text-helldev-beige text-center
+      Nuestro Equipo
+    h3
+    div className=mt-8 grid grid-cols-1 smgrid-cols-2 mdgrid-cols-3 lggrid-cols-4 gap-6
+      { Repetir por cada miembro }
+      div className=bg-black70 p-4 rounded-lg hovershadow-lg hovershadow-helldev-red50 transition transform hover-translate-y-1
+        img src=miembro-nombre.jpg alt=Foto de Juan Pérez className=w-32 h-32 mx-auto rounded-full border-2 border-helldev-red object-cover 
+        h4 className=mt-4 text-helldev-beige text-xl font-semibold text-center
+          Juan Pérez
+        h4
+        p className=text-helldev-greyLight text-center
+          Fullstack Developer
+        p
+        p className=mt-2 text-helldev-greyLight text-sm
+          Apasionado por exorcizar bugs y llevar proyectos al infierno creativo...
+        p
+        div className=mt-4 flex justify-center space-x-4
+          a href=httpslinkedin.cominjuan target=_blank rel=noopener noreferrer
+            svg className=w-6 h-6 text-helldev-beige hovertext-helldev-red transition  LinkedIn SVG svg
+          a
+          a href=httpsgithub.comjuan target=_blank rel=noopener noreferrer
+            svg className=w-6 h-6 text-helldev-beige hovertext-helldev-red transition  GitHub SVG svg
+          a
+        div
+      div
+      { ...otros miembros }
+    div
+  section
+  ```
+
+#### 4.3.4. Sección “Servicios” (`servicios`)
+
+ Hero de servicios
+
+  ```jsx
+  section className=bg-gradient-to-r from-black to-helldev-red py-20
+    div className=max-w-6xl mx-auto text-center px-8
+      h1 className=font-helldevTitle text-5xl mdtext-6xl text-helldev-beige
+        Servicios que encienden tu proyecto
+      h1
+      p className=mt-4 text-helldev-greyLight text-xl
+        Desarrollo Indie, Automatización con IA, Sprints Infernales y más
+      p
+    div
+  section
+  ```
+
+ Grid de cards de servicios
+
+  ```jsx
+  section id=servicios className=max-w-6xl mx-auto px-8 py-16 grid gap-8 grid-cols-1 mdgrid-cols-2
+    { Card Desarrollo Indie }
+    div className=bg-black80 p-6 rounded-lg
+      div className=flex items-center space-x-4
+        svg className=w-10 h-10 text-helldev-red  Icono portátilrockero svg
+        h2 className=font-helldevTitle text-2xl text-helldev-beige
+          Desarrollo Indie
+        h2
+      div
+      p className=mt-4 text-helldev-greyLight
+        Prototipado rápido, código limpio y documentado, arquitectura escalable. Rompe paradigmas y lanza tu MVP en tiempo récord.
+      p
+      ul className=mt-4 list-disc list-inside text-helldev-greyLight space-y-1
+        liDespliegue continuoli
+        liRevisiones de código automatizadasli
+        liUXUI enfocado en conversiónli
+      ul
+      Link href=serviciosdesarrollo-indie
+        a className=mt-4 inline-block text-helldev-red hovertext-helldev-orange transition
+          Ver detalles →
+        a
+      Link
+    div
+    { Card Automatización con IA }
+    div className=bg-black80 p-6 rounded-lg
+      div className=flex items-center space-x-4
+        svg className=w-10 h-10 text-helldev-red  Icono robotengranaje svg
+        h2 className=font-helldevTitle text-2xl text-helldev-beige
+          Automatización con IA
+        h2
+      div
+      p className=mt-4 text-helldev-greyLight
+        Implementamos pipelines de datos, entrenamos modelos de machine learning y automatizamos tareas repetitivas para que tu equipo se enfoque en lo importante.
+      p
+      ul className=mt-4 list-disc list-inside text-helldev-greyLight space-y-1
+        liModelos a medida (TensorFlow, PyTorch)li
+        liIntegración con CRM y ERPsli
+        liDashboards de monitoreoli
+      ul
+      Link href=serviciosautomatizacion-ia
+        a className=mt-4 inline-block text-helldev-red hovertext-helldev-orange transition
+          Ver detalles →
+        a
+      Link
+    div
+    { Card Sprints Infernales }
+    div className=bg-black80 p-6 rounded-lg
+      div className=flex items-center space-x-4
+        svg className=w-10 h-10 text-helldev-red  Icono cronómetrollama svg
+        h2 className=font-helldevTitle text-2xl text-helldev-beige
+          Sprints Infernales
+        h2
+      div
+      p className=mt-4 text-helldev-greyLight
+        Metodología ágil y extrema 2 semanas de desarrollo intensivo para entregar funcionalidades críticas y validar hipótesis de negocio rápidamente.
+      p
+      ul className=mt-4 list-disc list-inside text-helldev-greyLight space-y-1
+        liPlanificación diariali
+        liRevisiones continuasli
+        liDeploy diario en entorno stagingli
+      ul
+      Link href=serviciossprints-infernales
+        a className=mt-4 inline-block text-helldev-red hovertext-helldev-orange transition
+          Ver detalles →
+        a
+      Link
+    div
+    { Card Consultoría Técnica }
+    div className=bg-black80 p-6 rounded-lg
+      div className=flex items-center space-x-4
+        svg className=w-10 h-10 text-helldev-red  Icono diagramapizarra svg
+        h2 className=font-helldevTitle text-2xl text-helldev-beige
+          Consultoría Técnica
+        h2
+      div
+      p className=mt-4 text-helldev-greyLight
+        Desde auditorías de arquitectura hasta optimización de DevOps, te asesoramos en cada paso técnico para que tu producto escale sin cuellos de botella.
+      p
+      ul className=mt-4 list-disc list-inside text-helldev-greyLight space-y-1
+        liRevisión de arquitecturali
+        liOptimización de pipelines CICDli
+        liSeguridad y complianceli
+      ul
+      Link href=serviciosconsultoria-tecnica
+        a className=mt-4 inline-block text-helldev-red hovertext-helldev-orange transition
+          Ver detalles →
+        a
+      Link
+    div
+  section
+  ```
+
+#### 4.3.5. Página de Servicio Detallado (ej. `serviciosautomatizacion-ia`)
+
+1. Hero específico
+
+   ```jsx
+   section className=bg-pattern-ia bg-cover bg-center h-[50vh] mdh-[60vh] relative
+     div className=absolute inset-0 bg-black70div
+     div className=relative z-10 max-w-4xl mx-auto text-center px-8 py-20
+       h1 className=font-helldevTitle text-4xl mdtext-6xl text-helldev-beige
+         Automatización con IA
+       h1
+       p className=mt-4 text-helldev-greyLight text-xl
+         Potencia tus procesos con machine learning y bots inteligentes
+       p
+       Link href=#contacto
+         a className=mt-8 inline-block bg-helldev-red text-helldev-beige px-6 py-3 rounded-md hoverbg-helldev-orange transition
+           Contáctanos para demo →
+         a
+       Link
+     div
+   section
+   ```
+
+2. Descripción general (dos columnas)
+
+   ```jsx
+   section className=max-w-6xl mx-auto px-8 py-16 grid gap-12 grid-cols-1 mdgrid-cols-2
+     { Izquierda texto descriptivo }
+     div
+       p className=text-helldev-greyLight text-lg mb-4
+         En HellDev desarrollamos soluciones de automatización basadas en IA que integran pipelines de datos,
+         sistemas de extracción y procesamiento, y modelos de machine learning a medida. Nuestra experiencia incluye
+       p
+       p className=text-helldev-greyLight text-lg
+         • Entrenamiento de modelos con Python (TensorFlow, PyTorch).br
+         • Despliegue en contenedores Docker y Kubernetes.br
+         • Integración con plataformas Cloud (AWS, GCP, Azure).br
+         • Dashboard de monitoreo en tiempo real.
+       p
+     div
+     { Derecha lista de características }
+     div className=bg-black80 p-6 rounded-lg
+       h2 className=font-helldevTitle text-2xl text-helldev-beige mb-4
+         Características Técnicas
+       h2
+       ul className=space-y-3
+         li className=flex items-start text-helldev-greyLight
+           svg className=w-6 h-6 mr-2 text-helldev-red  Icono check svg
+           Modelos de ML desde cero, ajustados a tu data
+         li
+         li className=flex items-start text-helldev-greyLight
+           svg className=w-6 h-6 mr-2 text-helldev-red  Icono check svg
+           Orquestación de pipelines ETL con Node.js y Python
+         li
+         li className=flex items-start text-helldev-greyLight
+           svg className=w-6 h-6 mr-2 text-helldev-red  Icono check svg
+           Testing automatizado y validación de modelos
+         li
+         li className=flex items-start text-helldev-greyLight
+           svg className=w-6 h-6 mr-2 text-helldev-red  Icono check svg
+           Escalabilidad en Cloud contenedores, orquestación, serverless
+         li
+       ul
+     div
+   section
+   ```
+
+3. Proceso  Metodología (Timeline)
+
+   ```jsx
+   section className=max-w-6xl mx-auto px-8 py-16
+     h3 className=font-helldevTitle text-3xl text-helldev-beige text-center
+       Nuestro Proceso
+     h3
+     div className=mt-12 flex flex-col mdflex-row justify-between items-start space-y-8 mdspace-y-0 mdspace-x-6
+       { Paso 1 }
+       div className=flex flex-col items-center text-center
+         div className=w-16 h-16 flex items-center justify-center bg-helldev-red text-white rounded-full mb-4
+           1
+         div
+         h4 className=font-helldevTitle text-xl text-helldev-beige mb-2
+           Discovery y Requisitos
+         h4
+         p className=text-helldev-greyLight
+           Reunión inicial, levantamiento de datos y definición de objetivos.
+         p
+       div
+       { Paso 2 }
+       div className=flex flex-col items-center text-center
+         div className=w-16 h-16 flex items-center justify-center bg-helldev-red text-white rounded-full mb-4
+           2
+         div
+         h4 className=font-helldevTitle text-xl text-helldev-beige mb-2
+           Diseño de la Arquitectura
+         h4
+         p className=text-helldev-greyLight
+           Diagramas UMLER, selección de tecnologías y diseño de data pipelines.
+         p
+       div
+       { Paso 3 }
+       div className=flex flex-col items-center text-center
+         div className=w-16 h-16 flex items-center justify-center bg-helldev-red text-white rounded-full mb-4
+           3
+         div
+         h4 className=font-helldevTitle text-xl text-helldev-beige mb-2
+           Desarrollo de Modelos
+         h4
+         p className=text-helldev-greyLight
+           Entrenamiento, validación y ajuste de modelos de IA personalizados.
+         p
+       div
+       { Paso 4 }
+       div className=flex flex-col items-center text-center
+         div className=w-16 h-16 flex items-center justify-center bg-helldev-red text-white rounded-full mb-4
+           4
+         div
+         h4 className=font-helldevTitle text-xl text-helldev-beige mb-2
+           Integración y Pruebas
+         h4
+         p className=text-helldev-greyLight
+           CICD, pipelines de ML, pruebas unitarias e integración continua.
+         p
+       div
+       { Paso 5 }
+       div className=flex flex-col items-center text-center
+         div className=w-16 h-16 flex items-center justify-center bg-helldev-red text-white rounded-full mb-4
+           5
+         div
+         h4 className=font-helldevTitle text-xl text-helldev-beige mb-2
+           Despliegue y Mantenimiento
+         h4
+         p className=text-helldev-greyLight
+           Lanzamiento en producción, monitorización diaria y optimizaciones continuas.
+         p
+       div
+     div
+   section
+   ```
+
+4. Tecnologías utilizadas (Stack)
+
+   ```jsx
+   section className=max-w-6xl mx-auto px-8 py-16
+     h3 className=font-helldevTitle text-3xl text-helldev-beige text-center
+       Stack Tecnológico
+     h3
+     div className=mt-8 grid grid-cols-2 smgrid-cols-3 mdgrid-cols-4 gap-6
+       { Logo Python }
+       div className=flex flex-col items-center space-y-2
+         img src=logospython.svg alt=Python className=w-16 h-16 grayscale hovergrayscale-0 hoverscale-110 transition 
+         span className=text-helldev-greyLightPythonspan
+       div
+       { Logo TensorFlow }
+       div className=flex flex-col items-center space-y-2
+         img src=logostensorflow.svg alt=TensorFlow className=w-16 h-16 grayscale hovergrayscale-0 hoverscale-110 transition 
+         span className=text-helldev-greyLightTensorFlowspan
+       div
+       { Logo PyTorch }
+       div className=flex flex-col items-center space-y-2
+         img src=logospytorch.svg alt=PyTorch className=w-16 h-16 grayscale hovergrayscale-0 hoverscale-110 transition 
+         span className=text-helldev-greyLightPyTorchspan
+       div
+       { Logo Docker }
+       div className=flex flex-col items-center space-y-2
+         img src=logosdocker.svg alt=Docker className=w-16 h-16 grayscale hovergrayscale-0 hoverscale-110 transition 
+         span className=text-helldev-greyLightDockerspan
+       div
+       { Logo Kubernetes }
+       div className=flex flex-col items-center space-y-2
+         img src=logoskubernetes.svg alt=Kubernetes className=w-16 h-16 grayscale hovergrayscale-0 hoverscale-110 transition 
+         span className=text-helldev-greyLightKubernetesspan
+       div
+       { Logo Supabase }
+       div className=flex flex-col items-center space-y-2
+         img src=logossupabase.svg alt=Supabase className=w-16 h-16 grayscale hovergrayscale-0 hoverscale-110 transition 
+         span className=text-helldev-greyLightSupabasespan
+       div
+       { Logo AWS }
+       div className=flex flex-col items-center space-y-2
+         img src=logosaws.svg alt=AWS className=w-16 h-16 grayscale hovergrayscale-0 hoverscale-110 transition 
+         span className=text-helldev-greyLightAWSspan
+       div
+       { Logo Next.js }
+       div className=flex flex-col items-center space-y-2
+         img src=logosnextjs.svg alt=Next.js className=w-16 h-16 grayscale hovergrayscale-0 hoverscale-110 transition 
+         span className=text-helldev-greyLightNext.jsspan
+       div
+     div
+   section
+   ```
+
+5. Casos de éxito de IA
+
+   ```jsx
+   section className=max-w-6xl mx-auto px-8 py-16
+     h3 className=font-helldevTitle text-3xl text-helldev-beige text-center
+       Casos de Éxito de IA
+     h3
+     div className=mt-8 grid grid-cols-1 mdgrid-cols-2 gap-8
+       { Tarjeta caso 1 }
+       div className=bg-black80 p-6 rounded-lg flex flex-col mdflex-row items-center space-y-4 mdspace-y-0 mdspace-x-6
+         img src=projectsia-case1.jpg alt=Dashboard IA Proyecto A className=w-full mdw-13 rounded-lg shadow-lg object-cover 
+         div className=flex-1
+           h4 className=font-helldevTitle text-2xl text-helldev-beige
+             Proyecto A Dashboard Predictivo
+           h4
+           p className=mt-2 text-helldev-greyLight
+             Cliente Startup X. Utilizamos modelos de predicción para reducir un 40% el tiempo de procesamiento de datos.
+           p
+           Link href=portfolioproyecto-a
+             a className=mt-4 inline-block text-helldev-red hovertext-helldev-orange transition
+               Ver caso completo →
+             a
+           Link
+         div
+       div
+       { Tarjeta caso 2 }
+       div className=bg-black80 p-6 rounded-lg flex flex-col mdflex-row items-center space-y-4 mdspace-y-0 mdspace-x-6
+         img src=projectsia-case2.jpg alt=Bot IA Proyecto B className=w-full mdw-13 rounded-lg shadow-lg object-cover 
+         div className=flex-1
+           h4 className=font-helldevTitle text-2xl text-helldev-beige
+             Proyecto B Bot de Atención
+           h4
+           p className=mt-2 text-helldev-greyLight
+             Cliente Empresa Y. Implementamos chatbot con NLP que automatizó 70% de consultas de soporte.
+           p
+           Link href=portfolioproyecto-b
+             a className=mt-4 inline-block text-helldev-red hovertext-helldev-orange transition
+               Ver caso completo →
+             a
+           Link
+         div
+       div
+     div
+   section
+   ```
+
+6. Testimonios (opcional)
+
+   ```jsx
+   section className=max-w-6xl mx-auto px-8 py-16
+     h3 className=font-helldevTitle text-3xl text-helldev-beige text-center
+       Testimonios
+     h3
+     div className=mt-8 overflow-x-auto
+       div className=flex space-x-6
+         { Testimonio 1 }
+         div className=min-w-[300px] bg-black70 p-6 rounded-lg
+           p className=text-helldev-greyLight italic
+             “HellDev transformó por completo nuestro flujo de trabajo. La automatización con IA que implementaron nos ahorra horas cada semana.”  
+           p
+           p className=mt-4 text-helldev-red font-semibold
+             — Laura Gómez, CEO Startup Z
+           p
+         div
+         { Testimonio 2 }
+         div className=min-w-[300px] bg-black70 p-6 rounded-lg
+           p className=text-helldev-greyLight italic
+             “Su metodología de sprints infernales nos permitió lanzar nuestro MVP en tiempo récord. ¡Repetiría mil veces!”  
+           p
+           p className=mt-4 text-helldev-red font-semibold
+             — Carlos Ruiz, CTO de App Q
+           p
+         div
+         { …otros testimonios }
+       div
+     div
+   section
+   ```
+
+7. Footer secundario
+
+   ```jsx
+   footer className=bg-black py-12
+     div className=max-w-6xl mx-auto px-8 text-center text-helldev-greyLight
+       p¿Listo para encender tu proyecto en el infierno creativop
+       Link href=contacto
+         a className=mt-4 inline-block bg-helldev-red text-helldev-beige px-6 py-3 rounded-md hoverbg-helldev-orange transition
+           Solicita tu presupuesto →
+         a
+       Link
+     div
+   footer
+   ```
+
+---
+
+#### 4.3.6. Página de Portafolio (`portfolio`)
+
+ Hero breve
+
+  ```jsx
+  section className=bg-black py-12
+    div className=max-w-6xl mx-auto px-8 text-center
+      h1 className=font-helldevTitle text-4xl mdtext-5xl text-helldev-beige
+        Portafolio
+      h1
+      p className=mt-4 text-helldev-greyLight text-lg
+        Proyectos que han sobrevivido al Infierno del Código
+      p
+    div
+  section
+  ```
+
+ Filtro por categoría
+
+  ```jsx
+  section className=max-w-6xl mx-auto px-8 py-8
+    div className=flex flex-wrap justify-center gap-4
+      {['Todos', 'Móvil', 'Web', 'IA', 'UIUX', 'Otros'].map(cat = (
+        button
+          key={cat}
+          className=px-4 py-2 bg-black80 text-helldev-beige rounded-full hoverbg-helldev-red transition
+          onClick={() = setFiltro(cat)}
+        
+          {cat}
+        button
+      ))}
+    div
+  section
+  ```
+
+ Grid de tarjetas
+
+  ```jsx
+  section className=max-w-6xl mx-auto px-8 py-8
+    div className=grid grid-cols-1 smgrid-cols-2 lggrid-cols-3 gap-6
+      {proyectosFiltrados.map(proyecto = (
+        Link href={`portfolio${proyecto.slug}`} key={proyecto.slug}
+          a className=group bg-black70 rounded-lg overflow-hidden shadow-lg hovershadow-helldev-red50 transition
+            div className=relative h-48
+              Image
+                src={proyecto.coverImage}
+                alt={proyecto.title}
+                layout=fill
+                objectFit=cover
+                className=group-hoverscale-105 transition-transform duration-300
+              
+              div className=absolute inset-0 bg-black40 opacity-0 group-hoveropacity-80 transition-opacitydiv
+            div
+            div className=p-4
+              h3 className=font-helldevTitle text-xl text-helldev-beige
+                {proyecto.title}
+              h3
+              p className=text-helldev-red mt-1{proyecto.category}p
+              p className=mt-2 text-helldev-greyLight text-sm
+                {proyecto.excerpt}
+              p
+              p className=mt-4 text-helldev-red font-semibold
+                Ver caso →
+              p
+            div
+          a
+        Link
+      ))}
+    div
+  section
+  ```
+
+---
+
+#### 4.3.7. Detalle de proyecto (`portfolio[slug]`)
+
+1. Hero de proyecto
+
+   ```jsx
+   section className=relative h-[50vh] mdh-[60vh]
+     Image
+       src={proyecto.coverImage}
+       alt={`Portada ${proyecto.title}`}
+       layout=fill
+       objectFit=cover
+       className=object-center
+     
+     div className=absolute inset-0 bg-black60div
+     div className=relative z-10 max-w-4xl mx-auto px-8 py-20 text-center
+       h1 className=font-helldevTitle text-4xl mdtext-6xl text-helldev-beige
+         {proyecto.title}
+       h1
+       p className=mt-2 text-helldev-red{proyecto.cliente}p
+       {proyecto.linkExterno && (
+         Link href={proyecto.linkExterno}
+           a className=mt-4 inline-block bg-helldev-red text-helldev-beige px-6 py-3 rounded-md hoverbg-helldev-orange transition
+             Ver en vivo →
+           a
+         Link
+       )}
+     div
+   section
+   ```
+
+2. Resumen (dos columnas)
+
+   ```jsx
+   section className=max-w-6xl mx-auto px-8 py-16 grid gap-12 grid-cols-1 mdgrid-cols-2
+     { Izquierda Descripción }
+     div
+       p className=text-helldev-greyLight text-lg mb-4{proyecto.description}p
+     div
+     { Derecha Tecnologías }
+     div
+       h2 className=font-helldevTitle text-2xl text-helldev-beige mb-4
+         Tecnologías
+       h2
+       div className=flex flex-wrap gap-4
+         {proyecto.technologies.map(tech = (
+           span
+             key={tech}
+             className=bg-black70 text-helldev-beige px-3 py-1 rounded-full border border-helldev-red text-sm
+           
+             {tech}
+           span
+         ))}
+       div
+     div
+   section
+   ```
+
+3. Galería de imágenes  Screenshots
+
+   ```jsx
+   import { Swiper, SwiperSlide } from 'swiperreact';
+   import 'swipercss';
+   import 'swipercssnavigation';
+   import { Navigation } from 'swiper';
+
+   section className=max-w-6xl mx-auto px-8 py-16
+     h3 className=font-helldevTitle text-3xl text-helldev-beige text-center mb-8
+       Capturas
+     h3
+     Swiper
+       modules={[Navigation]}
+       navigation
+       spaceBetween={20}
+       slidesPerView={1}
+       className=w-full
+     
+       {proyecto.images.map((img, idx) = (
+         SwiperSlide key={idx}
+           Image
+             src={img}
+             alt={`Captura ${idx + 1} de ${proyecto.title}`}
+             width={1200}
+             height={800}
+             className=rounded-lg shadow-lg object-cover
+           
+         SwiperSlide
+       ))}
+     Swiper
+   section
+   ```
+
+4. Sección “Resultados”
+
+   ```jsx
+   section className=max-w-6xl mx-auto px-8 py-16
+     h3 className=font-helldevTitle text-3xl text-helldev-beige text-center mb-8
+       Resultados
+     h3
+     div className=grid grid-cols-1 smgrid-cols-2 lggrid-cols-3 gap-6
+       { Resultado 1 }
+       div className=bg-black70 p-6 rounded-lg text-center
+         h4 className=font-helldevTitle text-3xl text-helldev-beige
+           +300%
+         h4
+         p className=mt-2 text-helldev-redDescargas en 30 díasp
+       div
+       { Resultado 2 }
+       div className=bg-black70 p-6 rounded-lg text-center
+         h4 className=font-helldevTitle text-3xl text-helldev-beige
+            2s
+         h4
+         p className=mt-2 text-helldev-redTiempo de cargap
+       div
+       { Resultado 3 }
+       div className=bg-black70 p-6 rounded-lg text-center
+         h4 className=font-helldevTitle text-3xl text-helldev-beige
+           10K+
+         h4
+         p className=mt-2 text-helldev-redUsuarios en 1 mesp
+       div
+     div
+   section
+   ```
+
+5. CTA final
+
+   ```jsx
+   section className=bg-helldev-red80 py-16
+     div className=max-w-6xl mx-auto px-8 text-center
+       h3 className=font-helldevTitle text-3xl text-white mb-4
+         ¿Quieres que tu proyecto sea el próximo caso de éxito
+       h3
+       Link href=contacto
+         a className=bg-helldev-beige text-black px-6 py-3 rounded-md hoverbg-white hoverborder hoverborder-helldev-red transition
+           ¡Contáctanos!
+         a
+       Link
+     div
+   section
+   ```
+
+---
+
+#### 4.3.8. Sección “Blog” (`blog`)
+
+1. Hero del blog
+
+   ```jsx
+   section className=bg-black py-12
+     div className=max-w-6xl mx-auto px-8 text-center
+       h1 className=font-helldevTitle text-4xl mdtext-5xl text-helldev-beige
+         Blog
+       h1
+       p className=mt-4 text-helldev-greyLight text-lg
+         Historias, Tips y Tutoriales desde el Infierno del Código
+       p
+     div
+   section
+   ```
+
+2. Listado de artículos
+
+   ```jsx
+   section className=max-w-6xl mx-auto px-8 py-16 grid gap-8 grid-cols-1 mdgrid-cols-2
+     {posts.map(post = (
+       div key={post.slug} className=bg-black70 rounded-lg overflow-hidden shadow-lg hovershadow-helldev-red50 transition
+         div className=relative h-48
+           Image
+             src={post.coverImage}
+             alt={post.title}
+             layout=fill
+             objectFit=cover
+             className=group-hoverscale-105 transition-transform duration-300
+           
+         div
+         div className=p-6
+           span className=bg-helldev-red text-helldev-beige px-2 py-1 text-xs rounded-full
+             {post.category}
+           span
+           h3 className=font-helldevTitle text-xl text-helldev-beige mt-4
+             {post.title}
+           h3
+           p className=mt-2 text-helldev-greyLight text-sm
+             {post.excerpt}
+           p
+           p className=mt-4 text-helldev-greyLight text-xs
+             {new Date(post.date).toLocaleDateString('es-ES', { day 'numeric', month 'long', year 'numeric' })} • {post.author}
+           p
+           Link href={`blog${post.slug}`}
+             a className=mt-4 inline-block text-helldev-red font-semibold hovertext-helldev-orange transition
+               Leer más →
+             a
+           Link
+         div
+       div
+     ))}
+   section
+   ```
+
+    Paginación al final (si hay muchos artículos), con botones “ Anterior”  “Siguiente ”.
+
+3. Sidebar (opcional, solo en Desktop)
+
+   ```jsx
+   aside className=hidden lgblock lgw-14 xlw-15 px-8
+     { Buscador de artículos }
+     div className=mb-8
+       input
+         type=text
+         placeholder=Buscar en el blog...
+         className=w-full bg-black80 text-helldev-greyLight px-4 py-2 rounded-md placeholder-helldev-greyLight focusoutline-none focusring-2 focusring-helldev-red
+         onChange={e = setSearchTerm(e.target.value)}
+       
+     div
+     { Categorías }
+     div className=mb-8
+       h4 className=font-helldevTitle text-xl text-helldev-beige mb-4Categoríash4
+       ul className=space-y-2
+         {['Tutoriales', 'IA', 'DevOps', 'Casos', 'Noticias'].map(cat = (
+           li key={cat}
+             button
+               className=text-helldev-greyLight hovertext-helldev-red transition
+               onClick={() = setCategoryFilter(cat)}
+             
+               {cat}
+             button
+           li
+         ))}
+       ul
+     div
+     { Artículos populares }
+     div className=mb-8
+       h4 className=font-helldevTitle text-xl text-helldev-beige mb-4Popularesh4
+       ul className=space-y-4
+         {popularPosts.map(pop = (
+           li key={pop.slug} className=flex items-center space-x-4
+             Image src={pop.coverImage} alt={pop.title} width={60} height={60} className=rounded-md object-cover 
+             Link href={`blog${pop.slug}`}
+               a className=text-helldev-greyLight hovertext-helldev-red transition text-sm
+                 {pop.title}
+               a
+             Link
+           li
+         ))}
+       ul
+     div
+     { Newsletter }
+     div className=bg-black80 p-6 rounded-lg
+       h4 className=font-helldevTitle text-xl text-helldev-beige mb-4 text-centerSuscríbeteh4
+       form onSubmit={handleSubscribe}
+         input
+           type=email
+           placeholder=Tu email
+           className=w-full bg-black rounded-md text-helldev-greyLight px-4 py-2 placeholder-helldev-greyLight focusoutline-none focusring-2 focusring-helldev-red mb-4
+           required
+         
+         button type=submit className=w-full bg-helldev-red text-helldev-beige px-4 py-2 rounded-md hoverbg-helldev-orange transition
+           Suscribir
+         button
+       form
+     div
+   aside
+   ```
+
+---
+
+#### 4.3.9. Página de Artículo (`blog[slug]`)
+
+1. Hero del artículo
+
+   ```jsx
+   section className=relative h-[40vh] mdh-[50vh]
+     Image
+       src={post.coverImage}
+       alt={`Portada ${post.title}`}
+       layout=fill
+       objectFit=cover
+       className=object-center
+     
+     div className=absolute inset-0 bg-black60div
+     div className=relative z-10 max-w-4xl mx-auto px-8 py-16 text-center
+       h1 className=font-helldevTitle text-4xl mdtext-5xl text-helldev-beige
+         {post.title}
+       h1
+       {post.subtitle && (
+         p className=mt-4 text-helldev-greyLight text-lg
+           {post.subtitle}
+         p
+       )}
+       p className=mt-2 text-helldev-red text-sm
+         {new Date(post.date).toLocaleDateString('es-ES', { day 'numeric', month 'long', year 'numeric' })} • {post.author}
+       p
+     div
+   section
+   ```
+
+2. Contenido del artículo (MDX)
+
+   ```jsx
+   article className=prose prose-invert max-w-3xl mx-auto px-8 py-16
+     { MDX renderizado automáticamente }
+     MDXRemote {...post.content} components={mdxComponents} 
+   article
+   ```
+
+    MDX Components personalizados para adaptar estilos
+
+     ```js
+     const mdxComponents = {
+       h2 props = h2 className=font-helldevTitle text-2xl text-helldev-beige mt-8 mb-4 {...props} ,
+       h3 props = h3 className=font-helldevTitle text-xl text-helldev-beige mt-6 mb-3 {...props} ,
+       p props = p className=text-helldev-greyLight mb-4 {...props} ,
+       a props = a className=text-helldev-red hovertext-helldev-orange transition {...props} ,
+       code props = (
+         pre className=bg-black rounded-md p-4 overflow-x-auto
+           code className=language-js{props.children}code
+         pre
+       ),
+       ul props = ul className=list-disc list-inside text-helldev-greyLight space-y-2 mb-4 {...props} ,
+       blockquote props = blockquote className=border-l-4 border-helldev-red pl-4 italic text-helldev-beige my-6 {...props} ,
+       img props = img {...props} className=rounded-md shadow-lg mx-auto my-6 ,
+        etc.
+     };
+     ```
+
+3. CTA y artículos relacionados
+
+   ```jsx
+   section className=max-w-3xl mx-auto px-8 py-16
+     h4 className=font-helldevTitle text-2xl text-helldev-beige mb-6Artículos Relacionadosh4
+     div className=grid grid-cols-1 smgrid-cols-2 gap-6
+       {relatedPosts.map(rel = (
+         Link href={`blog${rel.slug}`} key={rel.slug}
+           a className=bg-black70 p-4 rounded-lg flex items-center space-x-4 hovershadow-helldev-red50 transition
+             img src={rel.coverImage} alt={rel.title} className=w-16 h-16 rounded-md object-cover 
+             span className=text-helldev-beige{rel.title}span
+           a
+         Link
+       ))}
+     div
+   section
+   ```
+
+4. Comentarios (opcional)
+
+    Integración con Disqus colocar el script de Disqus en el componente, usando `dangerouslySetInnerHTML` con cuidado (sanitizar).
+
+---
+
+#### 4.3.10. Página de Contacto (`contacto`)
+
+1. Hero de contacto
+
+   ```jsx
+   section className=relative h-[40vh] mdh-[50vh] bg-black
+     div className=absolute inset-0 bg-black70div
+     { Animación de partículas de fuego con Framer Motion (opcional) }
+     div className=relative z-10 max-w-4xl mx-auto px-8 py-16 text-center
+       h1 className=font-helldevTitle text-4xl mdtext-5xl text-helldev-beige
+         Hablemos del Infierno que quieres crear
+       h1
+       p className=mt-4 text-helldev-greyLight text-lg
+         Cuéntanos tu reto y te responderemos en 24 horas o menos
+       p
+     div
+   section
+   ```
+
+2. Formulario de contacto
+
+   ```jsx
+   section className=max-w-6xl mx-auto px-8 py-16 grid gap-12 grid-cols-1 mdgrid-cols-2
+     { Formulario (izquierda en Desktop) }
+     div
+       form onSubmit={handleSubmit(onSubmit)} className=bg-black80 p-8 rounded-lg space-y-6
+         div
+           label htmlFor=name className=block text-helldev-beige mb-1Nombre Completolabel
+           input
+             id=name
+             name=name
+             type=text
+             {...register('name', { required 'Este campo es obligatorio' })}
+             className=w-full bg-black rounded-md border border-helldev-greyLight text-helldev-greyLight px-4 py-2 focusoutline-none focusring-2 focusring-helldev-red
+           
+           {errors.name && p className=text-helldev-red text-sm mt-1{errors.name.message}p}
+         div
+         div
+           label htmlFor=email className=block text-helldev-beige mb-1Emaillabel
+           input
+             id=email
+             name=email
+             type=email
+             {...register('email', {
+               required 'El email es obligatorio',
+               pattern {
+                 value ^[^s@]+@[^s@]+.[^s@]+$,
+                 message 'Email inválido'
+               }
+             })}
+             className=w-full bg-black rounded-md border border-helldev-greyLight text-helldev-greyLight px-4 py-2 focusoutline-none focusring-2 focusring-helldev-red
+           
+           {errors.email && p className=text-helldev-red text-sm mt-1{errors.email.message}p}
+         div
+         div
+           label htmlFor=phone className=block text-helldev-beige mb-1Teléfono (opcional)label
+           input
+             id=phone
+             name=phone
+             type=tel
+             {...register('phone')}
+             className=w-full bg-black rounded-md border border-helldev-greyLight text-helldev-greyLight px-4 py-2 focusoutline-none focusring-2 focusring-helldev-red
+           
+         div
+         div
+           label htmlFor=serviceInterested className=block text-helldev-beige mb-1Servicio de interéslabel
+           select
+             id=serviceInterested
+             name=serviceInterested
+             {...register('serviceInterested', { required 'Selecciona un servicio' })}
+             className=w-full bg-black rounded-md border border-helldev-greyLight text-helldev-greyLight px-4 py-2 focusoutline-none focusring-2 focusring-helldev-red
+           
+             option value=— Selecciona —option
+             option value=Desarrollo IndieDesarrollo Indieoption
+             option value=Automatización con IAAutomatización con IAoption
+             option value=Sprints InfernalesSprints Infernalesoption
+             option value=Consultoría TécnicaConsultoría Técnicaoption
+           select
+           {errors.serviceInterested && p className=text-helldev-red text-sm mt-1{errors.serviceInterested.message}p}
+         div
+         div
+           label htmlFor=message className=block text-helldev-beige mb-1Mensaje (mín. 20 caracteres)label
+           textarea
+             id=message
+             name=message
+             rows=4
+             {...register('message', { required 'El mensaje es obligatorio', minLength { value 20, message 'Escribe al menos 20 caracteres' } })}
+             className=w-full bg-black rounded-md border border-helldev-greyLight text-helldev-greyLight px-4 py-2 focusoutline-none focusring-2 focusring-helldev-red
+           
+           {errors.message && p className=text-helldev-red text-sm mt-1{errors.message.message}p}
+         div
+         { reCAPTCHA invisible en background usando useEffect para obtener token }
+         input type=hidden name=recaptchaToken {...register('recaptchaToken', { required true })} 
+         div className=flex items-center
+           input
+             id=privacy
+             type=checkbox
+             {...register('privacy', { required 'Debes aceptar la Política de Privacidad' })}
+             className=h-4 w-4 text-helldev-red bg-black border-helldev-greyLight rounded focusoutline-none focusring-2 focusring-helldev-red
+           
+           label htmlFor=privacy className=ml-2 text-helldev-greyLight
+             Acepto la Link href=privacidada className=text-helldev-red hovertext-helldev-orangePolítica de PrivacidadaLink
+           label
+         div
+         {errors.privacy && p className=text-helldev-red text-sm mt-1{errors.privacy.message}p}
+         button
+           type=submit
+           className=mt-4 w-full bg-helldev-red text-helldev-beige px-6 py-3 rounded-md hoverbg-helldev-orange transition disabledopacity-50
+         
+           Enviar Mensaje
+         button
+         {submitError && p className=text-helldev-red mt-2{submitError}p}
+         {submitSuccess && p className=text-helldev-beige mt-2¡Mensaje enviado con éxito!p}
+       form
+     div
+     { Mapa (derecha en Desktop) }
+     div
+       iframe
+         src={`httpswww.google.commapsembedv1placekey=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=Calle+Falsa+123,+Madrid`}
+         width=100%
+         height=100%
+         allowFullScreen=
+         loading=lazy
+         className=rounded-lg filter grayscale contrast-75 brightness-75
+       iframe
+       p className=mt-4 text-helldev-greyLight text-sm
+         “Los datos que ingreses serán tratados de acuerdo con nuestra Política de Privacidad. No compartiremos tu información con terceros.”
+       p
+       div className=mt-6 space-y-2
+         a href=mailtocontacto@helldev.es className=flex items-center space-x-2 text-helldev-greyLight hovertext-helldev-red transition
+           svg className=w-6 h-6  Icono email svg
+           spancontacto@helldev.esspan
+         a
+         a href=httpswa.me34XXXXXXXXX target=_blank rel=noopener noreferrer className=flex items-center space-x-2 text-helldev-greyLight hovertext-helldev-red transition
+           svg className=w-6 h-6  Icono WhatsApp svg
+           span+34 XXXXXXXXX (WhatsApp)span
+         a
+         div className=flex items-center space-x-4 mt-4
+           a href=httpswww.instagram.comhelldev target=_blank rel=noopener noreferrer
+             svg className=w-6 h-6 text-helldev-greyLight hovertext-helldev-red transition  Instagram SVG svg
+           a
+           a href=httpswww.linkedin.comcompanyhelldev target=_blank rel=noopener noreferrer
+             svg className=w-6 h-6 text-helldev-greyLight hovertext-helldev-red transition  LinkedIn SVG svg
+           a
+         div
+       div
+     div
+   section
+   ```
+
+---
+
+## 5. Requisitos de rendimiento y SEO
+
+### 5.1. Performance (PWA y Core Web Vitals)
+
+1. Optimización de imágenes
+
+    Usar el componente `nextimage` para servir WebP o AVIF automáticamente.
+    Lazy-loading en todas las imágenes de portafolio, blog y screenshots.
+    Placeholder “blur” para evitar layout shift (LCPCLS).
+
+2. Minificación y splitting de código
+
+    Next.js hace splitting automático.
+    No importar librerías completas innecesarias (por ej. solo importar componentes específicos de Framer Motion en vez de toda la librería).
+
+3. Tailwind CSS
+
+    Configurar PurgeCSS (o JIT) para eliminar clases no usadas.
+    Generar tamaño de CSS final ≤ 50 KB gzipped.
+
+4. Caching y CDN
+
+    Vercel distribuye estáticos en CDN global.
+    Cache-Control en headers
+
+      HTML `no-cache` (para que Next.js verifique por actualizaciones).
+      JSCSSImágenes `public, max-age=31536000, immutable` (hash en nombres de archivos).
+
+5. Optimización de fuentes
+
+    Usar `@nextfont` (Next.js 13) para cargar “Bebas Neue” y “Montserrat” de forma optimizada.
+    Preload de fuentes clave en `Head`
+
+     ```html
+     link rel=preload href=fontsBebasNeue-Regular.woff2 as=font type=fontwoff2 crossorigin
+     link rel=preload href=fontsMontserrat-Regular.woff2 as=font type=fontwoff2 crossorigin
+     ```
+
+6. Medición y monitoreo
+
+    Lighthouse CI en GitHub Actions
+
+      Al hacer push en `main`, ejecutar `lighthouse` (en un contenedor) y generar reporte.
+    Web Vitals con Next.js
+
+     ```js
+      next.config.js
+     module.exports = {
+       experimental {
+         webVitals true
+       }
+     };
+      En pages_app.js
+     export function reportWebVitals(metric) {
+       console.log(metric);
+        Enviar a un service (p.ej. Vercel Analytics o un endpoint propio)
+     }
+     ```
+
+### 5.2. SEO (Search Engine Optimization)
+
+1. Meta tags y Open Graph
+
+    En cada página, dentro de `Head` en Next.js, incluir
+
+     ```jsx
+     Head
+       title{meta.title}title
+       meta name=description content={meta.description} 
+       meta property=ogtitle content={meta.ogTitle} 
+       meta property=ogdescription content={meta.ogDescription} 
+       meta property=ogimage content={meta.ogImage} 
+       meta property=ogurl content={meta.ogUrl} 
+       meta property=ogtype content=website 
+       meta name=twittercard content=summary_large_image 
+       meta name=twittertitle content={meta.twitterTitle} 
+       meta name=twitterdescription content={meta.twitterDescription} 
+       meta name=twitterimage content={meta.twitterImage} 
+     Head
+     ```
+
+    Generar contenido dinámico en rutas
+
+      Para `portfolio[slug].js`, extraer frontmatter (`title`, `excerpt`, `coverImage`) y pasarlo a `Head`.
+      Mismo para `blog[slug].js`.
+
+2. Estructura semántica del HTML
+
+    Usar etiquetas `header`, `nav`, `main`, `section`, `article`, `aside`, `footer`.
+    Encabezados jerárquicos H1 único, luego H2, H3.
+    Listas semánticas con `ul``li`.
+    Formularios con `label for=...` asociados a `input id=...`.
+
+3. Sitemap y robots.txt
+
+    Instalar y configurar `next-sitemap` en `next-sitemap.config.js`
+
+     ```js
+     module.exports = {
+       siteUrl 'httpshelldev.es',
+       generateRobotsTxt true,
+       exclude ['secret-page']
+     };
+     ```
+    Esto genera `sitemap.xml` y `robots.txt` en `out`.
+    Enviar `sitemap.xml` a Google Search Console y Bing Webmaster Tools.
+
+4. URLs limpias y amigables
+
+    Slugs en minúsculas con guiones.
+    En Next.js, en `getStaticPaths` usar el campo `slug` de cada MDXMarkdown.
+
+5. Atributos alt en imágenes
+
+    Todas las imágenes informativas deben llevar `alt` descriptivo.
+    Imágenes decorativas `alt=` y `role=presentation`.
+
+6. Rich Snippets  Schema.org
+
+    Incluir JSON-LD en `Head` para empresa y artículos
+
+      Organization
+
+       ```html
+       script type=applicationld+json
+       {
+         @context httpsschema.org,
+         @type Organization,
+         name HellDev,
+         url httpshelldev.es,
+         logo httpshelldev.eslogo-helldev.png,
+         sameAs [
+           httpswww.instagram.comhelldev,
+           httpswww.linkedin.comcompanyhelldev
+         ]
+       }
+       script
+       ```
+      LocalBusiness (si hay oficina física)
+
+       ```html
+       script type=applicationld+json
+       {
+         @context httpsschema.org,
+         @type LocalBusiness,
+         name HellDev,
+         image httpshelldev.esoficina.jpg,
+         address {
+           @type PostalAddress,
+           streetAddress Calle Falsa 123,
+           addressLocality Madrid,
+           addressRegion Madrid,
+           postalCode 28001,
+           addressCountry ES
+         },
+         telephone +34XXXXXXXXX,
+         email contacto@helldev.es,
+         url httpshelldev.es
+       }
+       script
+       ```
+      BlogPosting en cada artículo, con campos
+
+       ```html
+       script type=applicationld+json
+       {
+         @context httpsschema.org,
+         @type BlogPosting,
+         headline Título del artículo,
+         image [httpshelldev.esogimagen-articulo.jpg],
+         author {
+           @type Person,
+           name Autor del artículo
+         },
+         publisher {
+           @type Organization,
+           name HellDev,
+           logo {
+             @type ImageObject,
+             url httpshelldev.eslogo-helldev.png
+           }
+         },
+         datePublished 2025-05-10,
+         dateModified 2025-05-10,
+         description Extracto breve del artículo
+       }
+       script
+       ```
+
+---
+
+## 6. Accesibilidad (WCAG 2.1)
+
+1. Contraste de colores
+
+    Asegurar ratio ≥ 4.51 para textos normales, ≥ 31 para textos grandes.
+    Ejemplos
+
+      `#D9C6A7` sobre `#000000` → ratio ~ 121 (cumple).
+      `#E32F2F` sobre `#000000` → ratio ~ 5.51 (cumple).
+
+2. Navegación con teclado
+
+    Todos los enlaces y botones deben poder enfocarse con `Tab`.
+    Estados `focus` visibles `ring-2 ring-helldev-red` o borde rojo.
+
+3. Etiquetas ARIA
+
+    `role=navigation` en `nav`.
+    `aria-label` en botones de redes (“Enlace a Instagram HellDev”).
+    `aria-describedby` en inputs de formulario para mensajes de error.
+
+4. Texto alternativo en imágenes
+
+    Obligatorio para imágenes con contenido informativo.
+    Decorativas `alt=` y `role=presentation`.
+
+5. Estructura semántica
+
+    Uso correcto de `header`, `main`, `footer`, `article`, `section`, `aside`.
+    Listas (`ul`,`li`) y formularios accesibles (`label for=...`).
+
+6. Formularios
+
+    Etiquetas `label` asociadas con `htmlFor`.
+    Mensajes de error en `p role=alert` con color de alto contraste (rojo claro).
+    `aria-live=assertive` en contenedor de errores, para que lectores de pantalla anuncien cambios.
+
+---
+
+## 7. Seguridad
+
+1. HTTPS obligatorio
+
+    Vercel  Netlify lo configuran automáticamente.
+
+2. Protección contra XSSCSRF
+
+    Next.js escapa contenido en JSX por defecto; precaución al usar `dangerouslySetInnerHTML`.
+    El formulario `apicontact` valida y escapa datos para evitar inyecciones.
+    reCAPTCHA v3 en formulario para mitigar bots.
+    No exponer claves en front-end (usar `NEXT_PUBLIC_` solo para valores no sensibles).
+
+3. Content Security Policy (CSP)
+
+    Configurar cabeceras HTTP (en `vercel.json`)
+
+     ```jsonc
+     {
+       headers [
+         {
+           source (.),
+           headers [
+             {
+               key Content-Security-Policy,
+               value default-src 'self'; img-src 'self' data httpsmaps.googleapis.com; script-src 'self' httpswww.google-analytics.com httpswww.google.comrecaptcha; style-src 'self' 'unsafe-inline' httpsfonts.googleapis.com; font-src 'self' httpsfonts.gstatic.com; frame-src httpswww.google.comrecaptcha;
+             }
+           ]
+         }
+       ]
+     }
+     ```
+
+4. Protección de datos personales (RGPD)
+
+    Checkbox de consentimiento “Acepto la Política de Privacidad”.
+    Página `privacidad` debe detallar uso de datos, almacenamiento en Supabase, cookies, derecho de rectificación y supresión.
+    Banner de cookies si se usan cookies propias o de terceros (Analytics, Hotjar).
+
+5. Auditoría de dependencias
+
+    Ejecutar regularmente `npm audit` y actualizar librerías vulnerables.
+    Mantener Next.js, React y dependencias al día.
+
+---
+
+## 8. Análisis de Métricas y Monitorización
+
+1. Google Analytics 4
+
+    Instalar con `nextscript` en `_document.js` o `_app.js`
+
+     ```jsx
+     import Script from 'nextscript';
+
+     function MyApp({ Component, pageProps }) {
+       return (
+         
+           Script
+             src={`httpswww.googletagmanager.comgtagjsid=${process.env.NEXT_PUBLIC_GA_ID}`}
+             strategy=afterInteractive
+           
+           Script id=ga-script strategy=afterInteractive
+             {`
+               window.dataLayer = window.dataLayer  [];
+               function gtag(){dataLayer.push(arguments);}
+               gtag('js', new Date());
+               gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
+                 page_path window.location.pathname,
+               });
+             `}
+           Script
+           Component {...pageProps} 
+         
+       );
+     }
+
+     export default MyApp;
+     ```
+
+    Trackear eventos personalizados
+
+     ```js
+     const trackEvent = ({ action, category, label, value }) = {
+       window.gtag('event', action, {
+         event_category category,
+         event_label label,
+         value value
+       });
+     };
+
+      Ejemplo en formulario
+     trackEvent({
+       action 'submit_contact_form',
+       category 'Contacto',
+       label 'Formulario'
+     });
+     ```
+
+2. Sentry (opcional)
+
+    Instalar `@sentrynextjs` y crear `sentry.client.config.js`  `sentry.server.config.js` con DSN.
+    Capturar excepciones en front-end y en API Routes `apicontact`.
+
+3. Vercel Analytics
+
+    Dashboard con Web Vitals (LCP, FID, CLS).
+    Alertas si algún indicador empeora.
+
+4. Logs de email (SendGrid)
+
+    Usar webhooks de SendGrid para registrar entregas y rebotes.
+    Alertas en caso de tasa de rebote alta.
+
+5. Monitorización de uptime
+
+    Herramienta externa (UptimeRobot, Pingdom) revisa la URL cada 5 minutos.
+    Notificaciones vía emailSlack si la web cae.
+
+---
+
+## 9. Flujo de desarrollo e implementación
+
+1. Fase 1 Setup inicial y diseño
+
+    Crear repositorio en GitHub.
+    Iniciar proyecto Next.js en JavaScript
+
+     ```bash
+     npx create-next-app@latest helldev-web --use-npm --example with-tailwindcss
+     cd helldev-web
+     ```
+    Configurar ESLint (config de Airbnb adaptada) y Prettier.
+    Instalar dependencias
+
+     ```
+     npm install tailwindcss postcss autoprefixer
+     npm install framer-motion swr headlessui react-hook-form yup @sendgridmail @supabasesupabase-js
+     ```
+    Configurar `tailwind.config.js` con los tokens de colores y fuentes.
+
+2. Fase 2 Layout global y Home
+
+    Desarrollar `applayout.js` o `pages_app.js` con imports de `globals.css`, `Header ` y `Footer `.
+    Implementar componente `Header ` (con menú y animación de scroll).
+    Implementar componente `Hero ` en la página principal (`apppage.js` o `pagesindex.js`).
+    Ajustar animación de llama con Framer Motion.
+
+3. Fase 3 Páginas estáticas esenciales
+
+    Crear `nosotros` con el componente de equipo y textos descriptivos.
+    Crear `contacto` con el formulario funcional
+
+      Configurar `useForm` de react-hook-form y validación con Yup (opcional) o manual.
+      Implementar llamada a la API `apicontact`.
+    Crear `servicios` con las cards y rutas a subpáginas (ej. `serviciosautomatizacion-ia.js`, `serviciosdesarrollo-indie.js`, etc).
+
+4. Fase 4 Portafolio
+
+    Integrar MDX para portafolio
+
+     ```bash
+     npm install next-mdx-remote gray-matter
+     ```
+    Configurar función utilitaria `libportfolio.js` para leer archivos `.md``.mdx` en `contentportfolio`.
+    Implementar `getStaticProps` y `getStaticPaths` en `pagesportfolioindex.js` y `pagesportfolio[slug].js`.
+    Diseñar el grid de tarjetas de proyectos.
+
+5. Fase 5 Blog
+
+    De forma análoga, configurar MDX para `contentblog`.
+    Crear `pagesblogindex.js` (listado) y `pagesblog[slug].js` (detalle).
+    Agregar sintaxis resaltada con Prism.js
+
+     ```bash
+     npm install prismjs react-syntax-highlighter
+     ```
+    Ajustar estilos en `globals.css` para `prose` e incluir tema oscuro para código.
+
+6. Fase 6 SEO, performance y accesibilidad
+
+    Configurar `next-sitemap` y generar `sitemap.xml`, `robots.txt`.
+    Añadir meta tags dinámicos en cada página.
+    Ejecutar pruebas con Lighthouse y corregir errores de performance (optimizar imágenes, fonts).
+    Auditar accesibilidad contraste, navegación por teclado, atributos ARIA.
+
+7. Fase 7 Testing y QA
+
+    Instalar y configurar `jest` y `react-testing-library` (opcional si se desea).
+    Crear pruebas básicas en componentes críticos (Header, formulario de contacto).
+    Validación en distintos navegadores Chrome, Firefox, Safari, Edge.
+    Pruebas de usabilidad internas flujo home → servicios → contacto.
+
+8. Fase 8 Despliegue a producción
+
+    Configurar variables de entorno en Vercel
+
+     ```
+     NEXT_PUBLIC_SUPABASE_URL  
+     SUPABASE_KEY  
+     SENDGRID_API_KEY  
+     NEXT_PUBLIC_GOOGLE_MAPS_API_KEY  
+     RECAPTCHA_SECRET_KEY  
+     NEXT_PUBLIC_RECAPTCHA_SITE_KEY  
+     NEXT_PUBLIC_GA_ID  
+     ```
+    Push a `main` → GitHub Actions desencadena build y deploy en Vercel.
+    Verificar dominio `helldev.es`, SSL activo.
+
+9. Fase 9 Mantenimiento y actualizaciones
+
+    Plan regular de contenido blog, portafolio y casos de éxito.
+    Revisión mensual de métricas (GA4, Web Vitals).
+    Actualizar dependencias (Next.js, React, Tailwind) cada 2–3 meses.
+    Monitoreo de uptime y alertas si hay caídas.
+
+---
+
+## 10. Recomendaciones adicionales
+
+1. Consistencia de marca
+
+    Usar siempre la paleta Negro  Rojo  Naranja  Beige en todos los elementos — desde botones hasta infografías.
+    Logo completo (símbolo + “HellDev”) solo en header de la home y footer; el resto del sitio debe usar solo el símbolo (H + llama) para no saturar.
+
+2. Microinteracciones con Framer Motion
+
+    Animación de la llama en Hero loop sutil (`scale [1,1.05,1]`, `rotate [-2,2,-2]`).
+    FadeIn en cards al hacer scroll (usar Intersection Observer).
+    Hover en botones leve desplazamiento vertical y sombra roja.
+
+3. Responsividad
+
+    Mobile-first diseñar primero para pantallas  640px.
+    Breakpoints clave
+
+      `sm` (≥ 640px)
+      `md` (≥ 768px)
+      `lg` (≥ 1024px)
+      `xl` (≥ 1280px)
+    Verificar tipografías y tamaños de botones en cada punto de quiebre.
+
+4. Validaciones en formularios
+
+    react-hook-form con validación manual en JavaScript
+
+     ```js
+     const { register, handleSubmit, formState { errors } } = useForm();
+     const onSubmit = async data = {
+        Recaptcha obtener token en useEffect, asignar a data.recaptchaToken
+       try {
+         const res = await fetch('apicontact', {
+           method 'POST',
+           headers { 'Content-Type' 'applicationjson' },
+           body JSON.stringify(data)
+         });
+         const result = await res.json();
+         if (result.error) throw new Error(result.error);
+         setSubmitSuccess(true);
+       } catch (err) {
+         setSubmitError(err.message);
+       }
+     };
+     ```
+
+    Mensajes de error inline con estilo
+
+     ```jsx
+     {errors.email && p className=text-helldev-red text-sm{errors.email.message}p}
+     ```
+
+    Spinner en botón mientras se espera respuesta (usar estado `isSubmitting`).
+
+5. Cacheo en cliente
+
+    Usar SWR con `revalidateOnFocus false` para datos de blog (si se actualiza poco).
+    Usar `getStaticProps` y `getStaticPaths` para static generation de blog y portafolio (build time).
+
+6. Mejoras de accesibilidad
+
+    Link “Skip to content” al inicio de `body`, visible al enfocar con teclado
+
+     ```jsx
+     a href=#main className=sr-only focusnot-sr-only focusabsolute bg-helldev-red text-helldev-beige px-4 py-2
+       Saltar al contenido
+     a
+     ```
+    Agregar `aria-live=assertive` en contenedor de errores del formulario para que lectores de pantalla anuncien validaciones.
+    Verificar navegación en modo alto contraste y lectores de pantalla.
+
+7. Colaboración de diseño
+
+    Mantener un Figma o Storybook con componentes botones, cards, tipografías y tokens de color.
+    Documentar patrones en un archivo interno de “Guía de estilo” (tokens de diseño, ejemplos de uso).
+
+---
+
+## 11. Resumen de puntos clave
+
+ Stack front-end en JavaScript Next.js + React + Tailwind CSS + Framer Motion + react-hook-form + SWR.
+ Contenido estático MDXMarkdown para blog y portafolio, procesado con `getStaticProps``getStaticPaths`.
+ Formulario de contacto API Route en Next.js, validación en JS, reCAPTCHA v3, guardado en Supabase, envíos vía SendGrid.
+ Diseño UIUX paleta de colores (Negro  Rojo  Naranja  Beige), tipografía “Bebas Neue” + “Montserrat”.
+ SEO y performance SSRSSG, `next-sitemap`, meta tags dinámicos, optimización de imágenes con `nextimage`, Lighthouse CI.
+ Accesibilidad alto contraste, navegación con teclado, etiquetas ARIA, estructura semántica.
+ Seguridad HTTPS, CSP, validaciones, auditoría de dependencias, privacidad RGPD.
+ Despliegue Vercel con GitHub Actions (CICD), variables de entorno, monitoreo Web Vitals y uptime.
+
+Con esta especificación sin TypeScript, dispones de una guía completa para desarrollar un sitio web profesional, rápido y fiel al estilo “infierno creativo” de HellDev, usando únicamente JavaScript y herramientas adyacentes. Si necesitas fragmentos de código adicionales, ejemplos de configuración o aclarar algún punto en más detalle, házmelo saber.

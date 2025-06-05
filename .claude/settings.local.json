@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest:*)",
+      "Bash(npm create:*)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss init:*)",
+      "Bash(./node_modules/.bin/tailwindcss:*)",
+      "Bash(mkdir:*)",
+      "Bash(rm:*)",
+      "Bash(npm run dev:*)",
+      "Bash(cp:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(find:*)"
+    ],
+    "deny": []
+  }
+}
